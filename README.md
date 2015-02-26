@@ -153,7 +153,7 @@ class ContactsController < ApplicationController
   private
 
     def memorable_update
-      if @contact.previous_changes.key? [:name]
+      if @contact.previous_changes.key? :name
         {template_key: 'name', company_email: @contact.company.email}
       end
     end
