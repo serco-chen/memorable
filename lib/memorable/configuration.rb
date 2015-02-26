@@ -7,7 +7,7 @@ module Memorable
       attr_reader :register_actions, :journals_model
 
       def journals_model=(model)
-        model_klass = Object.const_get model
+        model_klass = Object.const_get model.capitalize
         @journals_model = model_klass
       end
 
