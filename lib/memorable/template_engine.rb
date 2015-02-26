@@ -75,7 +75,7 @@ module Memorable
       pattern = self.pattern_from I18n.available_locales
 
       add("templates/#{pattern}.yml")
-      add("app/views/memorable/#{pattern}.yml", Rails.root)
+      add("app/views/memorable/#{pattern}.yml", Rails.root) if defined?(Rails)
 
       instance.store_templates
     end
