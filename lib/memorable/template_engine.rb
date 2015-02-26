@@ -80,8 +80,8 @@ module Memorable
       instance.store_templates
     end
 
-    def self.render(*args)
-      instance.render(*args)
+    def self.assemble(*args)
+      instance.assemble(*args)
     end
 
     protected
