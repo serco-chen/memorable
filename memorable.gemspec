@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Memorable::VERSION
   spec.authors       = ["Cxg"]
   spec.email         = ["xg.chen87@gmail.com"]
-  spec.summary       = "Rails logger system based on action controllers."
-  spec.description   = ""
-  spec.homepage      = ""
+  spec.summary       = "A Rails logging system based on actions."
+  spec.description   = "A Rails logging system based on actions."
+  spec.homepage      = "https://github.com/serco-chen/memorable"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0") - %w[.gitignore]
