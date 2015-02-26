@@ -31,7 +31,7 @@ module Memorable
     end
 
     def assemble(options)
-      action_templates(options.controller, options.action, options.template_key).map do |locale, template|
+      action_templates(options[:controller], options[:action], options[:template_key]).map do |locale, template|
         content = render_template(template, options)
         [locale, content]
       end
