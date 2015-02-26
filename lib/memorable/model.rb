@@ -26,6 +26,7 @@ module Memorable
         journal.user_id       = options.delete :user_id
         journal.resource_id   = options.delete :resource_id
         journal.resource_type = options.delete :resource_type
+        journal.meta          = options if journal.respond_to?(:meta)
 
         journal.write_content(options)
         journal
