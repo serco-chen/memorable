@@ -6,7 +6,7 @@ module Memorable
     def write_content(options)
       current_locale = I18n.locale
 
-      TemplateEngine.assemble(options).each do |template|
+      Memorable.config.template_engine.assemble(options).each do |template|
         I18n.locale  = template[0]
         self.content = template[1]
       end

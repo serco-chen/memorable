@@ -20,7 +20,9 @@ module Memorable
       ActionController::Base.send :include, Memorable::Controller
 
       config.default_templates_directory ||= File.dirname(__FILE__)
-      (config.template_engine || DefaultYAMLEngine).load!
+      config.template_engine             ||= DefaultYAMLEngine
+
+      config.template_engine.load!
     end
   end
 end
