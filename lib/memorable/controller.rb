@@ -53,7 +53,7 @@ module Memorable
 
       if respond_to? custom_method_name
         custom_locals = self.send custom_method_name
-        locals.merge!(custom_locals)
+        locals.merge!(custom_locals) if custom_locals.is_a?(Hash)
       end
 
       locals

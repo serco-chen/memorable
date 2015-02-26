@@ -7,8 +7,8 @@ module Memorable
       current_locale = I18n.locale
 
       TemplateEngine.assemble(options).each do |template|
-        I18n.locale = template[0]
-        content     = template[1]
+        I18n.locale  = template[0]
+        self.content = template[1]
       end
 
       I18n.locale = current_locale
