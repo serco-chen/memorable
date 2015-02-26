@@ -44,14 +44,9 @@ module Memorable
         })
       end
 
-      # # Journals Model is free to override the behavior of this method
-      # if journal.respond_to? :set_attributes_for_event
-      #   journal.set_attributes_for_event(controller)
-      # end
-
       custom_method_name = "memorable_#{action_name}"
 
-      if respond_to? custom_method_name
+      if respond_to? custom_method_name, true
         custom_locals = self.send custom_method_name
         locals.merge!(custom_locals) if custom_locals.is_a?(Hash)
       end
