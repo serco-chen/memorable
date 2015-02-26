@@ -15,7 +15,7 @@ module Memorable
       locals = extract_memorable_locals
 
       # write to database
-      Configuration.journals_model.create_with_options!(locals)
+      Memorable.config.journals_model.create_with_options!(locals)
 
     rescue Exception => e
       raise e if Rails.env.development? # for debug
@@ -23,8 +23,8 @@ module Memorable
     end
 
     def memorable?
-      Configuration.registered?(controller_name, action_name) &&
-        Configuration.condition_matched?(self) &&
+      Registration.registered?(controller_name, action_name) &&
+        Registration.condition_matched?(self) &&
         response.successful?
     end
 
@@ -64,7 +64,7 @@ module Memorable
     end
 
     def memorable_resource_name
-      Configuration.resource_name(controller_name) || controller_name.singularize
+      Registration.resource_name(controller_name) || controller_name.singularize
     end
 
     module ClassMethods
@@ -100,7 +100,7 @@ module Memorable
       private
 
       def memorize_actions(action_names, options, condition_proc)
-        Configuration.register action_names, controller_name, options, condition_proc
+        Registration.register action_names, controller_name, options, condition_proc
       end
 
       def all_actions

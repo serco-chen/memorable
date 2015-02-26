@@ -2,21 +2,25 @@ require 'active_support'
 
 require 'memorable/version'
 require 'memorable/error'
-require 'memorable/configuration'
+require 'memorable/registration'
 require 'memorable/template_engine'
 require 'memorable/model'
 require 'memorable/controller'
 
 module Memorable
+  @config = ActiveSupport::OrderedOptions.new
 
   class << self
+    attr_reader :config
+
     def setup(&block)
-      Configuration.class_eval(&block) if block_given?
+      yield config if block_given?
 
-      Configuration.journals_model.send :include, Memorable::Model
-      ActionController::Base.send       :include, Memorable::Controller
+      config.journals_model.send  :include, Memorable::Model
+      ActionController::Base.send :include, Memorable::Controller
 
-      TemplateEngine.load!
+      config.default_templates_directory ||= File.dirname(__FILE__)
+      (config.template_engine || DefaultYAMLEngine).load!
     end
   end
 end

@@ -1,15 +1,9 @@
 module Memorable
-  class Configuration
+  class Registration
     @register_actions = {}
-    @journals_model = nil
 
     class << self
-      attr_reader :register_actions, :journals_model
-
-      def journals_model=(model)
-        model_klass = Object.const_get model.capitalize
-        @journals_model = model_klass
-      end
+      attr_reader :register_actions
 
       def register(action_names, controller_name, options, condition_proc)
         register_actions[controller_name] ||= {}
