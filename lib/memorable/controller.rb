@@ -3,7 +3,11 @@ module Memorable
     extend ActiveSupport::Concern
 
     included do
-      append_after_filter :memorize_callback
+      if Rails::VERSION::MAJOR > 3
+        append_after_action :memorize_callback
+      else
+        append_after_filter :memorize_callback
+      end
     end
 
     private
