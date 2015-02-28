@@ -4,12 +4,12 @@ module Memorable
   # to interpolate variables.
   class DefaultYAMLEngine < TemplateEngine
 
-    def render(params)
-      controller, action, sub_key = params[:controller], params[:action], params[:template_key] || 'base'
+    def render(locals)
+      controller, action, sub_key = locals[:controller], locals[:action], locals[:template_key] || 'base'
       @key ||= "#{controller}.#{action}.#{sub_key}"
       begin
-        I18n.t @key, params
-      rescue MissingTranslationData => e
+        I18n.t @key, locals
+      rescue  I18n::MissingTranslation => e
         raise e if @key.start_with("defaults")
         @key = "defaults.#{action}.#{sub_key}"
         retry

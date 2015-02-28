@@ -4,12 +4,12 @@ module Memorable
   # and implement custom render medthods.
   class TemplateEngine
 
-    def self.run(params)
-      self.new.render(params)
+    def self.run(locals)
+      self.new.render(locals)
     end
 
     # Override this method in subclass
-    def render(params)
+    def render(locals)
     end
 
   end

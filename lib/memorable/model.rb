@@ -3,14 +3,14 @@ module Memorable
   module Model
     extend ActiveSupport::Concern
 
-    def write_content(params)
-      self.content = memorable_content
+    def write_content(locals)
+      self.content = memorable_content(locals)
     end
 
     private
 
-    def memorable_content
-      Memorable.config.template_engine.run(params)
+    def memorable_content(locals)
+      Memorable.config.template_engine.run(locals)
     end
 
     module ClassMethods
@@ -22,16 +22,13 @@ module Memorable
       def build_with_params(params)
         instance = self.new
 
-        # set attributes except for `meta`
+        # set attributes and meta data if possible
         params.each do |key, value|
-          instance.send "#{key=}", value if instance.respond_to?(key)
+          instance.send "#{key}=", value if instance.respond_to?(key)
         end
 
-        # store rest of the params as meta data
-        instance.meta = params if instance.respond_to?(:meta)
-
-        # render content with params
-        instance.write_content(params)
+        # render content with meta data
+        instance.write_content(params[:meta])
         instance
       end
     end

@@ -12,10 +12,10 @@ module Memorable
       return unless memorable?
 
       # prepare locals for action
-      locals = extract_memorable_locals
+      options = extract_memorable_options
 
       # write to database
-      Memorable.config.journals_model.create_with_params!(locals)
+      Memorable.config.journals_model.create_with_params!(options)
 
     rescue Exception => e
       raise e if Rails.env.development? # for debug
@@ -28,30 +28,35 @@ module Memorable
         response.successful?
     end
 
-    def extract_memorable_locals
-      locals = ActiveSupport::HashWithIndifferentAccess.new ({
-        controller: controller_name,
-        action:     action_name,
-        user_id:    current_user.id
+    def extract_memorable_options
+      options = ActiveSupport::HashWithIndifferentAccess.new ({
+        user_id: current_user.try(:id)
+        meta: {
+          controller: controller_name,
+          action:     action_name
+        }
       })
 
       if memorable_resource
-        locals.merge! Hash[memorable_resource.previous_changes.map {|key, value| ["previous_#{key}", value[0]]}]
-        locals.merge! memorable_resource.attributes
-        locals.merge!({
+        resource_previous   = Hash[memorable_resource.previous_changes.map {|key, value| ["previous_#{key}", value[0]]}]
+        resource_attributes = memorable_resource.attributes
+        resource_options    = {
           resource_id:   memorable_resource.id,
           resource_type: memorable_resource.class.to_s
-        })
+        }
+
+        options[:meta].merge!(resource_previous).merge!(resource_attributes).merge!(resource_options)
+        options.merge!(resource_options)
       end
 
       custom_method_name = "memorable_#{action_name}"
 
       if respond_to? custom_method_name, true
         custom_locals = self.send custom_method_name
-        locals.merge!(custom_locals) if custom_locals.is_a?(Hash)
+        options[:meta].merge!(custom_locals) if custom_locals.is_a?(Hash)
       end
 
-      locals
+      options
     end
 
     def memorable_resource
