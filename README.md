@@ -31,6 +31,23 @@ gem install memorable-<VERSION>.gem
 
 ## Configuration
 
+run:
+
+    $ rails g memorable:install MODELNAME
+
+or ('journal' is the default name if not given one)
+
+    $ rails g memorable:install
+
+This command will create 4 files for you to start with:
+
+1. `db/migration/20150228032852_create_memorable_journal.rb`
+2. `app/models/journal.rb`
+3. `config/initializers/memorable.rb`
+4. `config/locales/memorable.en.yml`
+
+Or you can manually setup as follows:
+
 ### Initializer
 
 Write these lines of code to your configuration file, for example, `memorable.rb`.
@@ -60,17 +77,13 @@ class CreateJournal < ActiveRecord::Migration
       t.integer :resource_id
       t.string  :resource_type
       t.text    :meta
+      t.text    :content
 
       t.timestamps
     end
 
     add_index :journals, :user_id
     add_index :journals, :resource_id
-
-    # If you are not using globalize, https://github.com/globalize/globalize,
-    # comment this line and add a field named content into your journals table.
-    # eg: t.text :content
-    Journal.create_translation_table! :content => :text
   end
 
   def down
@@ -78,9 +91,6 @@ class CreateJournal < ActiveRecord::Migration
     remove_index :journals, :resource_id
 
     drop_table :journals
-
-    # If you are not using globalize, comment this line
-    Journal.drop_translation_table!
   end
 end
 ```
@@ -97,12 +107,11 @@ Create a ActiveRecord Model, and you are all set.
 
 ```ruby
 class Journal < ActiveRecord::Base
+  include Memorable::Model
+
   attr_accessible :resource_id, :resource_type, :user_id, :meta, :content
 
-  store :meta, accessors: [:controller, :action, :template_key ]
-
-  # If you are not using globalize, comment this line
-  translates :content, :fallbacks_for_empty_translations => true
+  store :meta
 
   belongs_to :user
   belongs_to :resource, polymorphic: true, :touch => true
@@ -111,30 +120,47 @@ end
 
 ## Usage
 
+Specify which actions you would like to log:
+
+```ruby
+class ContactsController < ApplicationController
+  memorize :only => [:create, :update]
+end
+```
+
+`memorize` method support following options:
+
+```
+- only, except  # It's used to specify action names to log
+- resource_name # Use to detect resource in special case
+- if, unless    # Add condition wheter to log or not
+```
+
 Add your own templates using yaml, this gem ships with a default yml template engine.
 
-Put your templates under `app/views/memorable` directory of you project, and name them with something like `en_US.yml`
+Put your templates under `config/locales` directory of you project, and name them with something like `memorable.en.yml`
 
 Here's an example of a typical template file
 
 ```
-defaults:
-  create:
-    base: "%{resource_type} created."
-  update:
-    base: "%{resource_type} updated."
-  destroy:
-    base: "%{resource_type} deleted."
-  others:
-    base: "%{action} was executed on %{resource_type}."
-contacts:
-  create:
-    base:  "Added vendor %{name} to Vendor Library."
-  update:
-    base: "Edited information for Vendor %{name}."
-    name: "Change Vendor Name form %{previous_name} to %{name}."
-  destroy:
-    base: "Deleted Vendor %{name}."
+en:
+  memorable:
+    defaults:
+      create:
+        base: "%{resource_type} %{resource_id} created."
+      update:
+        base: "%{resource_type} %{resource_id} updated."
+      destroy:
+        base: "%{resource_type} %{resource_id} deleted."
+
+    contacts:
+      create:
+        base:  "Added vendor %{name} to Vendor Library."
+      update:
+        base: "Edited information for Vendor %{name}."
+        name: "Change Vendor Name form %{previous_name} to %{name}."
+      destroy:
+        base: "Deleted Vendor %{name}."
 ```
 
 As you can see, controller_name and action_name are used as the first two levels of template_keys.
