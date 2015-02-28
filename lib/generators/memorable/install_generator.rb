@@ -11,25 +11,25 @@ module Memorable
               :desc => "The name of logging model.",
               :banner => "Logging model name, eg: journal"
 
-      def copy_initializer
-        template "memorable.rb.erb", "config/initializers/memorable.rb"
-      end
-
       def invoke_migration_generator
-        generate "memorable #{model_name.pluralize}"
+        generate "active_record:memorable #{model_name.pluralize}"
       end
 
       def copy_model_file
         template "model.rb.erb", "app/models/#{model_name}.rb"
       end
 
+      def copy_initializer
+        template "memorable.rb.erb", "config/initializers/memorable.rb"
+      end
+
       def copy_locale
         copy_file "../../../config/locales/en.yml", "config/locales/memorable.en.yml"
       end
 
-      def show_readme
-        readme "README" if behavior == :invoke
-      end
+      # def show_readme
+      #   readme "README" if behavior == :invoke
+      # end
     end
   end
 end
