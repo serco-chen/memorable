@@ -1,9 +1,0 @@
-defaults:
-  create:
-    base: "%{resource_type} created."
-  update:
-    base: "%{resource_type} updated."
-  destroy:
-    base: "%{resource_type} deleted."
-  others:
-    base: "%{action} was executed on %{resource_type}."

@@ -1,0 +1,23 @@
+class <%= migration_class_name %> < ActiveRecord::Migration
+  def up
+    create_table :<%= table_name %> do |t|
+      t.integer :user_id
+      t.integer :resource_id
+      t.string  :resource_type
+      t.text    :meta
+      t.text    :content
+
+      t.timestamps
+    end
+
+    add_index :<%= table_name %>, :user_id
+    add_index :<%= table_name %>, :resource_id
+  end
+
+  def down
+    remove_index :<%= table_name %>, :user_id
+    remove_index :<%= table_name %>, :resource_id
+
+    drop_table :<%= table_name %>
+  end
+end

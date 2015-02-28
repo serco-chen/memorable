@@ -1,12 +1,11 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+$:.push File.expand_path("../lib", __FILE__)
 require 'memorable/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "memorable"
   spec.version       = Memorable::VERSION
-  spec.authors       = ["Cxg"]
+  spec.authors       = ["Xiaoguang Chen"]
   spec.email         = ["xg.chen87@gmail.com"]
   spec.summary       = "A Rails logging system based on actions."
   spec.description   = %q{A Rails logging system based on actions, instead of
@@ -19,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
+  spec.required_ruby_version = '>= 1.9.3'
 
   spec.add_dependency 'activesupport', '>= 3.2.8', "< 5.0"
 

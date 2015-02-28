@@ -15,7 +15,7 @@ module Memorable
       locals = extract_memorable_locals
 
       # write to database
-      Memorable.config.journals_model.create_with_options!(locals)
+      Memorable.config.journals_model.create_with_params!(locals)
 
     rescue Exception => e
       raise e if Rails.env.development? # for debug

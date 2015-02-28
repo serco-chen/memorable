@@ -3,33 +3,36 @@ module Memorable
   module Model
     extend ActiveSupport::Concern
 
-    def write_content(options)
-      current_locale = I18n.locale
+    def write_content(params)
+      self.content = memorable_content
+    end
 
-      Memorable.config.template_engine.assemble(options).each do |template|
-        I18n.locale  = template[0]
-        self.content = template[1]
-      end
+    private
 
-      I18n.locale = current_locale
+    def memorable_content
+      Memorable.config.template_engine.run(params)
     end
 
     module ClassMethods
-      def create_with_options!(options={})
-        journal = self.build_with_options(options)
-        journal.save!
+      def create_with_params!(params={})
+        instance = self.build_with_params(params)
+        instance.save!
       end
 
-      def build_with_options(options)
-        journal = self.new
+      def build_with_params(params)
+        instance = self.new
 
-        journal.user_id       = options.delete :user_id
-        journal.resource_id   = options.delete :resource_id
-        journal.resource_type = options.delete :resource_type
-        journal.meta          = options if journal.respond_to?(:meta)
+        # set attributes except for `meta`
+        params.each do |key, value|
+          instance.send "#{key=}", value if instance.respond_to?(key)
+        end
 
-        journal.write_content(options)
-        journal
+        # store rest of the params as meta data
+        instance.meta = params if instance.respond_to?(:meta)
+
+        # render content with params
+        instance.write_content(params)
+        instance
       end
     end
   end

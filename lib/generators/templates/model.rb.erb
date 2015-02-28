@@ -1,0 +1,10 @@
+class <%= model_name.capitalize %> < ActiveRecord::Base
+  include Memorable::Model
+
+  attr_accessible :resource_id, :resource_type, :user_id, :meta, :content
+
+  store :meta, accessors: [:controller, :action, :template_key ]
+
+  belongs_to :user
+  belongs_to :resource, polymorphic: true, :touch => true
+end
