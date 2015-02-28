@@ -1,8 +1,9 @@
 en:
-  defaults:
-    create:
-      base: "%{resource_type} %{resource_id} created."
-    update:
-      base: "%{resource_type} %{resource_id} updated."
-    destroy:
-      base: "%{resource_type} %{resource_id} deleted."
+  memorable:
+    defaults:
+      create:
+        base: "%{resource_type} %{resource_id} created."
+      update:
+        base: "%{resource_type} %{resource_id} updated."
+      destroy:
+        base: "%{resource_type} %{resource_id} deleted."

@@ -6,12 +6,12 @@ module Memorable
 
     def render(locals)
       controller, action, sub_key = locals[:controller], locals[:action], locals[:template_key] || 'base'
-      @key ||= "#{controller}.#{action}.#{sub_key}"
+      @key ||= "memorable.#{controller}.#{action}.#{sub_key}"
       begin
-        I18n.t @key, locals
-      rescue  I18n::MissingTranslation => e
-        raise e if @key.start_with("defaults")
-        @key = "defaults.#{action}.#{sub_key}"
+        I18n.t! @key, locals
+      rescue I18n::MissingTranslationData => e
+        raise e if @key.start_with?("memorable.defaults")
+        @key = "memorable.defaults.#{action}.#{sub_key}"
         retry
       end
     end

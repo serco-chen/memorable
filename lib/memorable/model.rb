@@ -9,8 +9,8 @@ module Memorable
 
     private
 
-    def memorable_content(locals)
-      Memorable.config.template_engine.run(locals)
+    def memorable_content(*args)
+      Memorable.config.template_engine.run(*args)
     end
 
     module ClassMethods

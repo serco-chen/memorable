@@ -30,7 +30,7 @@ module Memorable
 
     def extract_memorable_options
       options = ActiveSupport::HashWithIndifferentAccess.new ({
-        user_id: current_user.try(:id)
+        user_id: current_user.try(:id),
         meta: {
           controller: controller_name,
           action:     action_name
