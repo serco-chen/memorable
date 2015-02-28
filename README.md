@@ -1,6 +1,6 @@
 # Memorable
 
-A Rails logging system based on actions instead of model callbacks. Customizable ready-to-run configurations and built-in I18n support.
+A Rails logging system based on actions instead of model callbacks with minimum configurations and built-in I18n support.
 
 **Note**
 It's released on [RubyGems](https://rubygems.org/gems/memorable).
@@ -35,9 +35,11 @@ run:
 
     $ rails g memorable:install MODELNAME
 
-or ('journal' is the default name if not given one)
+or
 
     $ rails g memorable:install
+
+('journal' is the default name if not given one)
 
 This command will create 4 files for you to start with:
 
@@ -132,13 +134,11 @@ end
 
 ```
 - only, except  # It's used to specify action names to log
-- resource_name # Use to detect resource in special case
-- if, unless    # Add condition wheter to log or not
+- resource_name # Use to detect resource in special cases
+- if, unless    # Add conditions whether to log or not
 ```
 
-Add your own templates using yaml, this gem ships with a default yml template engine.
-
-Put your templates under `config/locales` directory of you project, and name them with something like `memorable.en.yml`
+Then put your templates under `config/locales` directory of you project, and name it with something like `memorable.en.yml`.
 
 Here's an example of a typical template file
 
@@ -163,9 +163,7 @@ en:
         base: "Deleted Vendor %{name}."
 ```
 
-As you can see, controller_name and action_name are used as the first two levels of template_keys.
-
-And it support variable interpolation, default attributes, previous_changed attributes, controller_name, action_name, resource_type are included in default local variables.
+And it support variable interpolation, default attributes, previous_changed attributes, resource_type are included in default local variables.
 
 ## Advanced Usage
 

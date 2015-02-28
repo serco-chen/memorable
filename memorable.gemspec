@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["xg.chen87@gmail.com"]
   spec.summary       = "A Rails logging system based on actions."
   spec.description   = %q{A Rails logging system based on actions, instead of
-                          model callbacks. Customizable ready-to-run
-                          configurations and built-in I18n support.}
+                          model callbacks with minimum configurations and
+                          built-in I18n support.}
   spec.homepage      = "https://github.com/serco-chen/memorable"
   spec.license       = "MIT"
 
