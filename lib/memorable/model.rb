@@ -3,23 +3,8 @@ module Memorable
   module Model
     extend ActiveSupport::Concern
 
-    def write_content(locals)
-      self.content = memorable_content(locals)
-    end
-
-    private
-
-    def memorable_content(*args)
-      Memorable.config.template_engine.run(*args)
-    end
-
     module ClassMethods
       def create_with_params!(params={})
-        instance = self.build_with_params(params)
-        instance.save!
-      end
-
-      def build_with_params(params)
         instance = self.new
 
         # set attributes and meta data if possible
@@ -28,8 +13,14 @@ module Memorable
         end
 
         # render content with meta data
-        instance.write_content(params[:meta])
-        instance
+        instance.content = memorable_content(params[:meta])
+        instance.save!
+      end
+
+      private
+
+      def memorable_content(*args)
+        Memorable.config.template_engine.run(*args)
       end
     end
   end
