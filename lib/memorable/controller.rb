@@ -22,8 +22,12 @@ module Memorable
       Memorable.config.log_model.create_with_params!(options)
 
     rescue Exception => e
-      raise e if Rails.env.development? # for debug
-      Rails.logger.error e.message
+      handler = Memorable.config.send("error_on_#{Rails.env}")
+      if handler == :raise
+        raise e
+      elsif handler == :log
+        Rails.logger.error e.message
+      end
     end
 
     def memorable?
