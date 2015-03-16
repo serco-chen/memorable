@@ -42,14 +42,20 @@ module Memorable
       })
 
       if memorable_resource
-        resource_previous   = Hash[memorable_resource.previous_changes.map {|key, value| ["previous_#{key}", value[0]]}]
+        resource_previous = Hash[
+          memorable_resource.previous_changes.map do
+            |key, value| ["previous_#{key}", value[0]]
+          end
+        ]
         resource_attributes = memorable_resource.attributes
         resource_options    = {
           resource_id:   memorable_resource.id,
           resource_type: memorable_resource.class.to_s
         }
 
-        options[:meta].merge!(resource_previous).merge!(resource_attributes).merge!(resource_options)
+        options[:meta].merge!(resource_previous)
+          .merge!(resource_attributes)
+          .merge!(resource_options)
         options.merge!(resource_options)
       end
 
@@ -64,7 +70,12 @@ module Memorable
     end
 
     def memorable_resource
-      @memorable_resource ||= self.instance_variable_get("@#{memorable_resource_name}") || self.send(:resource) rescue nil
+      begin
+        @memorable_resource ||=
+          self.instance_variable_get("@#{memorable_resource_name}") || self.send(:resource)
+      rescue NoMethodError
+        nil
+      end
     end
 
     def memorable_resource_name
@@ -73,10 +84,11 @@ module Memorable
 
     module ClassMethods
       def memorize(options = {}, &block)
-        raise InvalidOptionsError, "if and unless cannot appear at the sametime" if options[:if] && options[:unless]
+        raise InvalidOptionsError, "if and unless cannot appear at the sametime" \
+          if options[:if] && options[:unless]
 
-        if condition = (options[:if] || options[:unless])
-          if_condition = !!options[:if]
+        if_condition = !!options[:if]
+        if condition = (options.delete(:if) || options.delete(:unless))
           if condition.is_a?(Symbol)
             condition_proc = proc { |c| if_condition ? c.send(condition) : !c.send(condition) }
           elsif condition.is_a? Proc
@@ -86,8 +98,10 @@ module Memorable
           end
         end
 
-        raise InvalidOptionsError, "except and only cannot appear at the sametime" if options[:except] && options[:only]
+        raise InvalidOptionsError, "except and only cannot appear at the sametime" \
+          if options[:except] && options[:only]
 
+        all_actions       = action_methods.map(&:to_s)
         specified_actions = [options[:except] || options[:only]].flatten.compact.map(&:to_s)
         actions =
           if options.delete(:only)
@@ -105,10 +119,6 @@ module Memorable
 
       def memorize_actions(action_names, options, condition_proc)
         Registration.register action_names, controller_name, options, condition_proc
-      end
-
-      def all_actions
-        @all_actions ||= action_methods.map(&:to_s)
       end
     end
   end
