@@ -7,9 +7,9 @@ module Memorable
 
       desc "Creates a Memorable initializer and copy locale files to your application."
 
-      argument :model_name, :type => :string, :default => "journal",
+      argument :model_name, :type => :string, :default => "activity_log",
               :desc => "The name of logging model.",
-              :banner => "Logging model name, eg: journal"
+              :banner => "Logging model name, eg: activity_log"
 
       def invoke_migration_generator
         generate "active_record:memorable #{model_name.pluralize}"
@@ -26,10 +26,6 @@ module Memorable
       def copy_locale
         copy_file "../../../config/locales/en.yml", "config/locales/memorable.en.yml"
       end
-
-      # def show_readme
-      #   readme "README" if behavior == :invoke
-      # end
     end
   end
 end

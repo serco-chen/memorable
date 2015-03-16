@@ -15,9 +15,10 @@ module Memorable
 
     def setup(&block)
       yield config if block_given?
-      ActionController::Base.send :include, Memorable::Controller
-
       config.template_engine ||= DefaultYAMLEngine
+      config.log_model = Object.const_get(config.log_model)
+
+      ActionController::Base.send :include, Memorable::Controller
     end
   end
 end

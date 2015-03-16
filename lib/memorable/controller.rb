@@ -19,7 +19,7 @@ module Memorable
       options = extract_memorable_options
 
       # write to database
-      Memorable.config.journals_model.create_with_params!(options)
+      Memorable.config.log_model.create_with_params!(options)
 
     rescue Exception => e
       raise e if Rails.env.development? # for debug

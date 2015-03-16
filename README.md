@@ -39,12 +39,12 @@ or
 
     $ rails g memorable:install
 
-('journal' is the default name if not given one)
+('activity_log' is the default name if not given one)
 
 This command will create 4 files for you to start with:
 
-1. `db/migration/20150228032852_create_memorable_journal.rb`
-2. `app/models/journal.rb`
+1. `db/migration/20150228032852_create_memorable_activity_logs.rb`
+2. `app/models/activity_log.rb`
 3. `config/initializers/memorable.rb`
 4. `config/locales/memorable.en.yml`
 
@@ -56,7 +56,7 @@ Write these lines of code to your configuration file, for example, `memorable.rb
 
 ```ruby
 Memorable.setup do |config|
-  config.journals_model = Journal
+  config.log_model = "ActivityLog"
 
   # Specify template engine, default
   # config.template_engine = DefaultYAMLEngine
@@ -72,9 +72,9 @@ Or require this file manually by yourself.
 Create a migration file as following:
 
 ```ruby
-class CreateJournal < ActiveRecord::Migration
+class CreateActivityLog < ActiveRecord::Migration
   def up
-    create_table :journals do |t|
+    create_table :activity_logs do |t|
       t.integer :user_id
       t.integer :resource_id
       t.string  :resource_type
@@ -84,15 +84,15 @@ class CreateJournal < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :journals, :user_id
-    add_index :journals, :resource_id
+    add_index :activity_logs, :user_id
+    add_index :activity_logs, :resource_id
   end
 
   def down
-    remove_index :journals, :user_id
-    remove_index :journals, :resource_id
+    remove_index :activity_logs, :user_id
+    remove_index :activity_logs, :resource_id
 
-    drop_table :journals
+    drop_table :activity_logs
   end
 end
 ```
@@ -101,14 +101,14 @@ And then execute:
 
     $ bundle exec rake db:migrate
 
-This will give you a journals table.
+This will give you a activity_logs table.
 
 ### Model
 
 Create a ActiveRecord Model, and you are all set.
 
 ```ruby
-class Journal < ActiveRecord::Base
+class ActivityLog < ActiveRecord::Base
   include Memorable::Model
 
   attr_accessible :resource_id, :resource_type, :user_id, :meta, :content
